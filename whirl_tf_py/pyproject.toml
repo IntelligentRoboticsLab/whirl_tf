@@ -1,0 +1,28 @@
+[build-system]
+requires = ["maturin>=1.9,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "whirl-tf"
+description = "Timestamped coordinate-frame transforms for robotics"
+readme = "../README.md"
+license = "MIT OR Apache-2.0"
+authors = [{ name = "Team whIRLwind" }]
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+dynamic = ["version"]
+
+[project.urls]
+Repository = "https://github.com/IntelligentRoboticsLab/whirl_tf"
+
+[tool.maturin]
+python-source = "."
+module-name = "whirl_tf._native"
+python-packages = ["whirl_tf"]
+features = ["pyo3/extension-module"]

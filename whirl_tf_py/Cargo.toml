@@ -1,0 +1,31 @@
+[package]
+name = "whirl_tf_py"
+description = "Python bindings for whirl_tf"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[lib]
+name = "_native"
+crate-type = ["cdylib", "rlib"]
+doctest = false
+test = false
+
+[dependencies]
+whirl_tf = { workspace = true, default-features = false }
+nalgebra.workspace = true
+pyo3.workspace = true
+pyo3-stub-gen.workspace = true
+
+[lints]
+workspace = true
+
+# Regenerates `whirl_tf_py/whirl_tf/_native.pyi`.
+[[bin]]
+name = "stub_gen"
+path = "src/bin/stub_gen.rs"
+doctest = false
+test = false

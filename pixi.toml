@@ -1,0 +1,35 @@
+[workspace]
+authors = ["Team whIRLwind"]
+channels = ["conda-forge"]
+name = "whirl-tf"
+platforms = ["osx-arm64", "linux-64", "linux-aarch64"]
+version = "0.1.0-alpha.1"
+
+[environments]
+py = ["wheel-build", "python-tasks"]
+
+[dependencies]
+python = "==3.11"
+
+[tasks]
+rs-check = "cargo clippy --all-targets --all-features -- -Dwarnings && cargo test -p whirl_tf --all-features"
+rs-fmt = "cargo fmt --all"
+python-stubs = "LD_LIBRARY_PATH=\"$CONDA_PREFIX/lib\" DYLD_FALLBACK_LIBRARY_PATH=\"$CONDA_PREFIX/lib\" cargo run --manifest-path whirl_tf_py/Cargo.toml --bin stub_gen && pixi run -e py ruff format --config whirl_tf_py/pyproject.toml whirl_tf_py/whirl_tf/_native.pyi"
+
+[feature.python-tasks.tasks]
+py-build = "pixi run -e py py-build-common"
+py-build-wheel = "pixi run -e py py-build-wheel-common"
+py-fmt = "ruff format --config whirl_tf_py/pyproject.toml"
+py-lint = "ruff check --config whirl_tf_py/pyproject.toml && ruff format --check --config whirl_tf_py/pyproject.toml"
+
+[feature.python-tasks.pypi-dependencies]
+ruff = ">=0.15.1,<0.16.0"
+
+[feature.wheel-build.tasks]
+py-build-common = "PIP_REQUIRE_VIRTUALENV=0 maturin develop --manifest-path whirl_tf_py/Cargo.toml"
+py-build-wheel-common = "maturin build --release --manifest-path whirl_tf_py/Cargo.toml --out whirl_tf_py/dist/"
+
+[feature.wheel-build.dependencies]
+pip = ">=23"
+setuptools = ">=80.0,<81.0"
+maturin = ">=1.9.6,<2"

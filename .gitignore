@@ -1,0 +1,13 @@
+/target
+
+whirl_tf_py/dist/
+
+.pixi/
+.ruff_cache/
+.mypy_cache/
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+*.egg-info/
+.DS_Store

@@ -1,0 +1,21 @@
+[package]
+name = "whirl_tf"
+description = "Coordinate-frame contracts and timestamped transform lookups for robotics"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+
+[features]
+default = ["ros"]
+ros = []
+
+[dependencies]
+nalgebra.workspace = true
+thiserror.workspace = true
+transforms.workspace = true
+
+[lints]
+workspace = true
