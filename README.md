@@ -11,8 +11,8 @@ Python package built with PyO3 and maturin.
 
 The transform buffer supports static and dynamic edges, interpolation between
 dynamic samples, explicit-timestamp lookup, matrix conversion, frame-name
-validation, and a small set of canonical robot frame constants. It does not
-extrapolate outside the available dynamic history.
+validation, and transform-aware message filtering. It does not extrapolate
+outside the available dynamic history.
 
 ## Installation
 

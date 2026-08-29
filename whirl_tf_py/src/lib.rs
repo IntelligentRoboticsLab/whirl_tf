@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use ::whirl_tf::{
     FilterFailureReason as RustFilterFailureReason, MessageFilter as RustMessageFilter,
-    TransformBuffer as RustTransformBuffer, frames, isometry_from_components, isometry_to_matrix4,
+    TransformBuffer as RustTransformBuffer, isometry_from_components, isometry_to_matrix4,
     matrix4_to_isometry,
 };
 use nalgebra::{Isometry3, Matrix4};
@@ -16,39 +16,8 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pyfunction, gen_stub_pyme
 create_exception!(whirl_tf._native, TransformError, PyException);
 create_exception!(whirl_tf._native, FrameError, PyException);
 
-/// Frames exposed as module-level constants. Declared once so the runtime values
-/// and their stub declarations cannot drift apart.
-macro_rules! frame_constants {
-    ($(($name:literal, $value:expr)),* $(,)?) => {
-        $(pyo3_stub_gen::module_variable!("whirl_tf._native", $name, String);)*
-
-        fn add_frame_constants(module: &Bound<'_, PyModule>) -> PyResult<()> {
-            $(module.add($name, $value)?;)*
-            Ok(())
-        }
-    };
-}
-
-frame_constants!(
-    ("FIELD", frames::FIELD),
-    ("ODOM", frames::ODOM),
-    ("BASE_LINK", frames::BASE_LINK),
-    ("BASE_FOOTPRINT", frames::BASE_FOOTPRINT),
-    ("TORSO", frames::TORSO),
-    ("GAZE", frames::GAZE),
-    ("LEFT_CAMERA_LINK", frames::LEFT_CAMERA_LINK),
-    (
-        "LEFT_CAMERA_OPTICAL_FRAME",
-        frames::LEFT_CAMERA_OPTICAL_FRAME
-    ),
-    ("LEFT_SOLE", frames::LEFT_SOLE),
-    ("RIGHT_SOLE", frames::RIGHT_SOLE),
-);
-
-pyo3_stub_gen::module_variable!("whirl_tf._native", "ALL", Vec<String>);
-
-/// Gathers the stub declarations submitted by the macros above; used by the
-/// `stub_gen` binary.
+/// Gathers the stub declarations submitted by this module's macros; used by
+/// the `stub_gen` binary.
 pub fn stub_info() -> pyo3_stub_gen::Result<pyo3_stub_gen::StubInfo> {
     let manifest_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
     pyo3_stub_gen::StubInfo::from_pyproject_toml(manifest_dir.join("pyproject.toml"))
@@ -503,8 +472,6 @@ fn whirl_tf(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_function(wrap_pyfunction!(require_frame, module)?)?;
     module.add("TransformError", module.py().get_type::<TransformError>())?;
     module.add("FrameError", module.py().get_type::<FrameError>())?;
-    add_frame_constants(module)?;
-    module.add("ALL", frames::ALL)?;
     Ok(())
 }
 

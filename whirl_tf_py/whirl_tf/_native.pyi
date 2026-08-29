@@ -5,36 +5,13 @@ import builtins
 import typing
 
 __all__ = [
-    "ALL",
-    "BASE_FOOTPRINT",
-    "BASE_LINK",
-    "FIELD",
     "FilterFailureReason",
     "FrameError",
-    "GAZE",
-    "LEFT_CAMERA_LINK",
-    "LEFT_CAMERA_OPTICAL_FRAME",
-    "LEFT_SOLE",
     "MessageFilter",
-    "ODOM",
-    "RIGHT_SOLE",
-    "TORSO",
     "TransformBuffer",
     "TransformError",
     "require_frame",
 ]
-
-ALL: builtins.list[builtins.str]
-BASE_FOOTPRINT: builtins.str
-BASE_LINK: builtins.str
-FIELD: builtins.str
-GAZE: builtins.str
-LEFT_CAMERA_LINK: builtins.str
-LEFT_CAMERA_OPTICAL_FRAME: builtins.str
-LEFT_SOLE: builtins.str
-ODOM: builtins.str
-RIGHT_SOLE: builtins.str
-TORSO: builtins.str
 
 @typing.final
 class FilterFailureReason:

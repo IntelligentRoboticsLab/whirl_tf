@@ -1,8 +1,8 @@
-//! Coordinate-frame names, ROS codecs, timestamped transform lookup, and
-//! transform-aware message filtering.
+//! ROS codecs, timestamped transform lookup, and transform-aware message
+//! filtering.
 
 mod buffer;
-pub mod frames;
+mod frame;
 mod message_filter;
 #[cfg(feature = "ros")]
 pub mod ros_msgs;
@@ -15,5 +15,5 @@ pub use buffer::{
 pub use buffer::{
     isometry_to_transform_stamped, matrix4_to_transform_stamped, transform_stamped_to_isometry,
 };
-pub use frames::{FrameError, require_frame};
+pub use frame::{FrameError, require_frame};
 pub use message_filter::{DroppedMessage, FilterFailureReason, MessageFilter};

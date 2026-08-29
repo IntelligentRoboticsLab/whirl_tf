@@ -1,6 +1,6 @@
 [package]
 name = "whirl_tf"
-description = "Coordinate-frame contracts and timestamped transform lookups for robotics"
+description = "Timestamped coordinate-frame transforms for robotics"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
