@@ -28,7 +28,7 @@ Or add the Rust crate:
 cargo add whirl_tf
 ```
 
-Python 3.11 and newer are supported. Wheels are published for manylinux
+Python 3.10 and newer are supported. Wheels are published for manylinux
 x86-64, manylinux AArch64, and macOS Apple silicon.
 
 ## Python example
@@ -55,17 +55,58 @@ ROS-style Python `TransformStamped` and `TFMessage` objects can be inserted
 with `insert_transform_stamped` and `insert_transform_message`; these methods
 use attribute access and therefore do not require a ROS Python dependency.
 
+## Filtering stamped messages
+
+`MessageFilter` holds a stamped message until its transform is available. It
+reads `message.header.frame_id` and `message.header.stamp` by attribute, so it
+works with ROS messages without making whirl-tf depend on ROS:
+
+```python
+from whirl_tf import MessageFilter, TransformBuffer
+
+buffer = TransformBuffer(history_seconds=10.0)
+
+def handle_scan(scan):
+    matrix = buffer.lookup(
+        scan.header.frame_id,
+        "field",
+        scan.header.stamp.sec * 1_000_000_000 + scan.header.stamp.nanosec,
+    )
+    # Process the scan with matrix here.
+
+scan_filter = MessageFilter(buffer, "field", queue_size=100, callback=handle_scan)
+
+# These can be used directly as subscription callbacks. Their execution order
+# no longer matters: every successful transform insertion wakes the filter.
+scan_subscription_callback = scan_filter.add
+tf_subscription_callback = buffer.insert_transform_message
+```
+
+Waiting messages are delivered in FIFO order, including when a later message
+becomes transformable first. A nonzero queue size bounds memory and discards
+the oldest waiting message on overflow; `register_failure_callback` reports
+that message and a `FilterFailureReason`. A queue size of zero is unbounded.
+
+Use `set_target_frames` when every message must be transformable into multiple
+frames. `set_tolerance_ns` additionally requires transform coverage at the
+message timestamp plus the given interval, matching tf2's tolerance behavior.
+
 ## Rust example
 
 ```rust
 use std::time::Duration;
 
 use nalgebra::Isometry3;
-use whirl_tf::TransformBuffer;
+use whirl_tf::{MessageFilter, TransformBuffer};
 
 let mut buffer = TransformBuffer::new(Duration::from_secs(10));
 buffer.insert_isometry("field", "odom", &Isometry3::identity(), 0, true)?;
 let odom_to_field = buffer.lookup_ns("odom", "field", 1_000_000_000)?;
+
+let mut filter = MessageFilter::new("field", 100)?;
+filter.add("scan", "odom", 1_000_000_000);
+let ready_scans = filter.drain_ready(&buffer);
+assert_eq!(ready_scans, ["scan"]);
 
 # Ok::<(), whirl_tf::TransformBufferError>(())
 ```

@@ -374,7 +374,7 @@ fn validate_isometry(isometry: &Isometry3<f64>) -> Result<(), TransformBufferErr
     }
 }
 
-fn normalize_frame(frame: &str) -> Result<String, TransformBufferError> {
+pub(crate) fn normalize_frame(frame: &str) -> Result<String, TransformBufferError> {
     let normalized = frame.trim_start_matches('/');
     if normalized.is_empty() {
         return Err(TransformBufferError::InvalidFrame {

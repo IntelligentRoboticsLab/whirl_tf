@@ -9,7 +9,7 @@ version = "0.1.0-alpha.1"
 py = ["wheel-build", "python-tasks"]
 
 [dependencies]
-python = "==3.11"
+python = "==3.10"
 
 [tasks]
 rs-check = "cargo clippy --all-targets --all-features -- -Dwarnings && cargo test -p whirl_tf --all-features"
