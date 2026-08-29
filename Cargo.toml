@@ -3,7 +3,7 @@ members = ["whirl_tf", "whirl_tf_py"]
 resolver = "2"
 
 [workspace.package]
-version = "0.1.0-alpha.2"
+version = "0.1.0-alpha.3"
 edition = "2024"
 authors = ["Team whIRLwind"]
 license = "MIT OR Apache-2.0"
@@ -19,7 +19,7 @@ missing_panics_doc = "allow"
 type_complexity = "allow"
 
 [workspace.dependencies]
-whirl_tf = { path = "whirl_tf", version = "0.1.0-alpha.2", default-features = false }
+whirl_tf = { path = "whirl_tf", version = "0.1.0-alpha.3", default-features = false }
 
 nalgebra = "0.34"
 pyo3 = { version = "0.29", default-features = false, features = [
